@@ -118,6 +118,10 @@ Vue.mixin({
           break;
         }
 
+        case '56': {
+          binance_utils.init()
+        }
+
 
         default:
           break;
@@ -654,7 +658,7 @@ Vue.mixin({
     chainId: async function(val) {
       if (!provider && val === '1') {
         await onConnect();
-      }
+      } 
 
       this.getTokens();
     }

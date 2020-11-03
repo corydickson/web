@@ -11,7 +11,7 @@ binance_utils.getChainVerbose = chainId => {
     case '0x61':
       return { name: 'Binance Smart Chain Test Network', addressType: 'eth' };
   }
-}
+};
 
 
 /**
@@ -114,13 +114,13 @@ binance_utils.transferViaExtension = async (amount, to_address, from_address) =>
   });
 };
 
+binance_utils.init = () => {
+  BinanceChain.on('connect', info => {
+    console.log(`connected to ${binance_utils.getChainVerbose(info.chainId).name}!`);
+  });
 
-/* EVENTS */
-BinanceChain.on('connect', info => {
-  console.log(`connected to ${binance_utils.getChainVerbose(info.chainId).name}!`);
-});
-
-BinanceChain.on('chainChanged', chainId => {
-  console.log(`connected to ${binance_utils.getChainVerbose(chainId).name}!`);
-  window.location.reload(); // reload page when chain changes
-});
+  BinanceChain.on('chainChanged', chainId => {
+    console.log(`connected to ${binance_utils.getChainVerbose(chainId).name}!`);
+    window.location.reload(); // reload page when chain changes
+  });
+}
