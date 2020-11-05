@@ -31,7 +31,7 @@ def get_binance_txn_status(fulfillment):
         }
 
         headers = {
-            'Host': 'gitcoin.co'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0. 2272.118 Safari/537.36.'
         }
 
         binance_response = requests.post(binance_url, json=data, headers=headers).json()
@@ -43,9 +43,9 @@ def get_binance_txn_status(fulfillment):
         if result:
             tx_status = int(result.get('status'), 16) # convert hex to decimal
 
-            if tx_status == '1':
+            if tx_status == 1:
                 response = { 'status': 'done' }
-            elif tx_status == '0':
+            elif tx_status == 0:
                 response = { 'status': 'expired' }
 
     except Exception as e:
