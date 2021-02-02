@@ -2921,7 +2921,13 @@ def get_profile_tab(request, profile, tab, prev_context):
             context['login_idena_url'] = idena_callback_url(request, profile)
 
         today = datetime.today()
-        context['brightid_status'] = get_brightid_status(profile.brightid_uuid)
+
+        context['get_brightid_status'] = reverse(recheck_brightid_status, args=(profile.handle,))
+        if profile.is_brightid_verified:
+            context['brightid_status'] = 'verified'
+        else:
+            context['brightid_status'] = 'not_verified'
+
         if settings.DEBUG:
             context['brightid_status'] = 'not_verified'
 
@@ -3073,6 +3079,23 @@ def authenticate_idena(request, handle):
             "authenticated": True
         }
     })
+
+@login_required
+def recheck_brightid_status(request, handle):
+    is_logged_in_user = request.user.is_authenticated and request.user.username.lower() == handle.lower()
+    if not is_logged_in_user:
+        return JsonResponse({
+            'ok': False,
+            'msg': f'Request must be for the logged in user'
+        })
+    
+    profile = profile_helper(handle, True)
+    user_brightid_status = get_brightid_status(profile.brightid_uuid)
+    profile.is_brightid_verified = user_brightid_status == 'verified'
+    profile.save(update_fields=['is_brightid_verified'])
+
+    return redirect(reverse('profile_by_tab', args=(profile.handle, 'trust')))
+    
 
 @login_required
 def recheck_idena_status(request, handle):

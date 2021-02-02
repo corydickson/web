@@ -166,6 +166,11 @@ urlpatterns = [
         name='logout_idena'
     ),
     url(
+        r'^api/v0.1/profile/(?P<handle>.*)/brightid_status',
+        dashboard.views.recheck_brightid_status,
+        name='get_brightid_status'
+    ),
+    url(
         r'^api/v0.1/profile/(?P<handle>.*)/recheck_idena_status',
         dashboard.views.recheck_idena_status,
         name='recheck_idena_status'
